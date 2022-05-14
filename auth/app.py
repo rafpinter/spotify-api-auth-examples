@@ -61,7 +61,7 @@ app.secret_key = os.getenv('SECRET_KEY')
 
 @app.route('/')
 def index():
-
+    print('CHEGUEI /')
     return render_template('index.html')
 
 
@@ -73,6 +73,7 @@ def login(loginout):
         Login and logout process are essentially the same. Logout forces
         re-login to appear, even if their token hasn't expired.
     '''
+    print('ENTROU NO LOGIN')
 
     # redirect_uri can be guessed, so let's generate
     # a random `state` string to prevent csrf forgery.
@@ -106,11 +107,17 @@ def login(loginout):
     res = make_response(redirect(f'{AUTH_URL}/?{urlencode(payload)}'))
     res.set_cookie('spotify_auth_state', state)
 
+    print(type(res))
+    print(res)
+
+
+    print('SAINDO DO LOGIN')
     return res
 
 
 @app.route('/callback')
 def callback():
+    print('ENTROU NO CALLBACK')
     error = request.args.get('error')
     code = request.args.get('code')
     state = request.args.get('state')
@@ -147,12 +154,15 @@ def callback():
         'access_token': res_data.get('access_token'),
         'refresh_token': res_data.get('refresh_token'),
     }
+    
 
+    print('SAINDO DO CALLBACK')
     return redirect(url_for('me'))
 
 
 @app.route('/refresh')
 def refresh():
+    print('ENTROU NO REFRESH')
     '''Refresh access token.'''
 
     payload = {
@@ -175,6 +185,7 @@ def refresh():
 @app.route('/me')
 def me():
     '''Get profile info as a API example.'''
+    print('ENTROU NO ME')
 
     # Check for tokens
     if 'tokens' not in session:
